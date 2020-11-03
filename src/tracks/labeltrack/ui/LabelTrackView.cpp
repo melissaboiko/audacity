@@ -1869,8 +1869,12 @@ void LabelTrackView::OnLabelAdded( LabelTrackEvent &e )
    // even lose the focus and open the label to edit in the first place.
    // -1 means we don't need to restore it to anywhere.
    // 0 or above is the track to restore to after editing the label is complete.
-   if( mRestoreFocus >= -1 )
-      mSelIndex = pos;
+   //
+   // TODO: only do this while playing; make setable via option
+   if (! UNFOCUS_LABEL_NAME ) {
+      if( mRestoreFocus >= -1 )
+         mSelIndex = pos;
+   }
 
    if( mRestoreFocus < 0 )
       mRestoreFocus = -2;
