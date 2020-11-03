@@ -23,6 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../AllThemeResources.h"
 #include "../../../HitTestResult.h"
 #include "../../../Project.h"
+#include "../../../ProjectAudioIO.h"
 #include "../../../ProjectHistory.h"
 #include "../../../ProjectSettings.h"
 #include "../../../ProjectWindow.h"
@@ -1856,6 +1857,12 @@ int LabelTrackView::AddLabel(const SelectedRegion &selectedRegion,
 
 void LabelTrackView::OnLabelAdded( LabelTrackEvent &e )
 {
+   AudacityProject *project = GetActiveProject();
+   auto &projectAudioIO = ProjectAudioIO::Get( *project );
+   auto gAudioIO = AudioIO::Get();
+   bool is_playing = ( projectAudioIO.GetAudioIOToken()>0 &&
+     gAudioIO->IsStreamActive(projectAudioIO.GetAudioIOToken()) );
+
    e.Skip();
    if ( e.mpTrack.lock() != FindTrack() )
       return;
@@ -1870,10 +1877,11 @@ void LabelTrackView::OnLabelAdded( LabelTrackEvent &e )
    // -1 means we don't need to restore it to anywhere.
    // 0 or above is the track to restore to after editing the label is complete.
    //
-   // TODO: only do this while playing; make setable via option
-   if (! UNFOCUS_LABEL_NAME ) {
-      if( mRestoreFocus >= -1 )
-         mSelIndex = pos;
+   // only set focus to newly created text label if not currently playing track
+   // TODO: option?
+   if (!is_playing) {
+     if( mRestoreFocus >= -1 )
+       mSelIndex = pos;
    }
 
    if( mRestoreFocus < 0 )

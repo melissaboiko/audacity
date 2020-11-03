@@ -213,8 +213,6 @@ private:
 
    static void calculateFontHeight(wxDC & dc);
 
-// elilla
-#define UNFOCUS_LABEL_NAME true
 public:
    bool HasSelection( AudacityProject &project ) const;
 
