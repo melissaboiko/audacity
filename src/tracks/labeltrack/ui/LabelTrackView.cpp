@@ -1879,7 +1879,7 @@ void LabelTrackView::OnLabelAdded( LabelTrackEvent &e )
    //
    // only set focus to newly created text label if not currently playing track
    // TODO: option?
-   if (!is_playing) {
+   if ( !is_playing ) {
      if( mRestoreFocus >= -1 )
        mSelIndex = pos;
    }
@@ -1896,7 +1896,9 @@ void LabelTrackView::OnLabelAdded( LabelTrackEvent &e )
    //
    //      If the label is added during actions like import, then the
    //      mDrawCursor flag will be reset once the action is complete.
-   mDrawCursor = true;
+   if ( !is_playing ) {
+       mDrawCursor = true;
+   }
 }
 
 void LabelTrackView::OnLabelDeleted( LabelTrackEvent &e )
